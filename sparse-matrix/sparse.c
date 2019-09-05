@@ -1,31 +1,7 @@
 #include <stdio.h>
 
-void main()
-{
-	int a[10][10], m, n, b[100][3], k = 1, c[100][3], d[100][3];
-
-	printf("Enter rows and columns: ");
-	scanf("%d%d", &m, &n);
-
-	printf("Enter Values: ");
-	for (int i = 0; i < m; i++)
-	{
-		for (int j = 0; j < n; j++)
-		{
-			scanf("%d", &a[i][j]);
-		}
-	}
-
-	printf("Matrix you entered: \n");
-	for (int i = 0; i < m; i++)
-	{
-		for (int j = 0; j < n; j++)
-		{
-			printf("%d\t", a[i][j]);
-		}
-		printf("\n");
-	}
-
+void convertTo3Column(int a[10][10], int m, int n, int b[][3]){
+	int k = 1;
 	for (int i = 0; i < m; i++)
 	{
 		for (int j = 0; j < n; j++)
@@ -43,18 +19,10 @@ void main()
 	b[0][0] = m;
 	b[0][1] = n;
 	b[0][2] = k - 1;
+}
 
-	printf("Three Column Matrix\n");
-	for (int i = 0; i <= b[0][2]; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			printf("%d\t", b[i][j]);
-		}
-		printf("\n");
-	}
-
-	k = 1;
+void transpose(int b[][3], int c[][3]){
+	int k = 1;
 	c[0][0] = b[0][0];
 	c[0][1] = b[0][1];
 	c[0][2] = b[0][2];
@@ -72,18 +40,13 @@ void main()
 			}
 		}
 	}
+}
 
-	printf("Transpose: \n");
-	for (int i = 0; i <= c[0][2]; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			printf("%d\t", c[i][j]);
-		}
-		printf("\n");
+int add(int b[][3], int c[][3], int d[][3]){
+	if(c[0][0] != b[0][0] || c[0][1] != b[0][1]){
+		return 0;
 	}
-
-	k = 1;
+	int k = 1;
 	int i = 1;
 	int j = 1;
 	d[0][0] = b[0][0];
@@ -138,13 +101,61 @@ void main()
 		}
 	}
 	d[0][2] = k-1;
-	printf("Sum: \n");
-	for (int i = 0; i <= d[0][2]; i++)
+	return 1;
+}
+
+void print3Column(int a[][3]){
+	for (int i = 0; i <= a[0][2]; i++)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			printf("%d\t", d[i][j]);
+			printf("%d\t", a[i][j]);
 		}
 		printf("\n");
 	}
+}
+
+void main()
+{
+	int a[10][10], m, n, b[100][3], k = 1, c[100][3], d[100][3];
+
+	printf("Enter rows and columns: ");
+	scanf("%d%d", &m, &n);
+
+	printf("Enter Values: ");
+	for (int i = 0; i < m; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			scanf("%d", &a[i][j]);
+		}
+	}
+
+	printf("Matrix you entered: \n");
+	for (int i = 0; i < m; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			printf("%d\t", a[i][j]);
+		}
+		printf("\n");
+	}
+
+	convertTo3Column(a, m, n, b);
+
+	printf("Three Column Matrix\n");
+	print3Column(b);
+
+	transpose(b, c);
+
+	printf("Transpose: \n");
+	print3Column(c);
+
+	if(add(b, c, d)){
+		printf("They cannot be added!\n");
+		return;
+	}
+	
+	printf("Sum: \n");
+	print3Column(d);
 }
