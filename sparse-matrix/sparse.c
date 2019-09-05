@@ -54,7 +54,6 @@ void main()
 		printf("\n");
 	}
 
-	printf("Transpose is:\n");
 	k = 1;
 	c[0][0] = b[0][0];
 	c[0][1] = b[0][1];
@@ -84,12 +83,68 @@ void main()
 		printf("\n");
 	}
 
-	k = 0;
-	int i = 0;
-	int j = 0;
-	while (k < b[0][2] + c[0][2])
+	k = 1;
+	int i = 1;
+	int j = 1;
+	d[0][0] = b[0][0];
+	d[0][1] = b[0][1];
+	int max = b[0][2] + c[0][2];
+	while (k <= max)
 	{
-		
+		if (b[i][0] < c[j][0] && i <= b[0][2])
+		{
+			d[k][0] = b[i][0];
+			d[k][1] = b[i][1];
+			d[k][2] = b[i][2];
+			i++;
+			k++;
+		}
+		else if (b[i][0] > c[j][0] && j <= c[0][2])
+		{
+			d[k][0] = c[j][0];
+			d[k][1] = c[j][1];
+			d[k][2] = c[j][2];
+			k++;
+			j++;
+		}
+		else
+		{
+			if (b[i][1] < c[j][1] && i <= b[0][2])
+			{
+				d[k][0] = b[i][0];
+				d[k][1] = b[i][1];
+				d[k][2] = b[i][2];
+				i++;
+				k++;
+			}
+			else if (b[i][1] > c[j][1] && j <= c[0][2])
+			{
+				d[k][0] = c[j][0];
+				d[k][1] = c[j][1];
+				d[k][2] = c[j][2];
+				k++;
+				j++;
+			}
+			else
+			{
+				d[k][0] = b[i][0] + c[j][0];
+				d[k][1] = b[i][1] + c[j][1];
+				d[k][2] = b[i][2] + c[j][2];
+				k++;
+				i++;
+				j++;
+				max--;
+			}
+		}
 	}
-	
+	d[0][2] = k-1;
+	printf("Sum: \n");
+	for (int i = 0; i <= d[0][2]; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			printf("%d\t", d[i][j]);
+		}
+		printf("\n");
+	}
 }
