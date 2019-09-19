@@ -4,14 +4,15 @@
 typedef struct node
 {
     int data;
-    struct node *link;
+    struct node *rlink, *llink;
 } node;
 
 node *getNode(int x)
 {
     node *new = (node *)malloc(sizeof(node));
     new->data = x;
-    new->link = NULL;
+    new->rlink = NULL;
+    new->llink = NULL;
     return new;
 }
 
@@ -25,10 +26,11 @@ void getInitialLL(node *header)
     {
         printf("Enter data: ");
         scanf("%d", &x);
-        ptr->link = getNode(x);
-        temp = ptr->link;
-        temp->link = NULL;
-        ptr = ptr->link;
+        ptr->rlink = getNode(x);
+        temp = ptr->rlink;
+        temp->rlink = NULL;
+        temp->llink = ptr;
+        ptr = ptr->rlink;
         printf("Do you want to add another node?(y/N): ");
         scanf("%c", &ch);
         scanf("%c", &ch);
@@ -38,16 +40,16 @@ void getInitialLL(node *header)
 void printLL(node *header)
 {
     node *ptr;
-    if (header->link == NULL)
+    if (header->rlink == NULL)
     {
         printf("\nNo elements in linked list!\n");
         return;
     }
-    ptr = header->link;
+    ptr = header->rlink;
     while (ptr != NULL)
     {
         printf("%d\n", ptr->data);
-        ptr = ptr->link;
+        ptr = ptr->rlink;
     }
 }
 
@@ -58,26 +60,28 @@ void insertAtFront(node *header)
     printf("Enter data: ");
     scanf("%d", &x);
     new = getNode(x);
-    new->link = header->link;
-    header->link = new;
+    new->rlink = header->rlink;
+    new->llink = header;
+    header->rlink = new;
 }
 
 void insertAtKey(node *header, int key)
 {
     int x;
     node *new, *ptr;
-    ptr = header->link;
+    ptr = header->rlink;
     while (ptr != NULL && ptr->data != key)
     {
-        ptr = ptr->link;
+        ptr = ptr->rlink;
     }
     if (ptr->data == key)
     {
         printf("Enter data: ");
         scanf("%d", &x);
         new = getNode(x);
-        new->link = ptr->link;
-        ptr->link = new;
+        new->rlink = ptr->rlink;
+        new->llink = ptr;
+        ptr->rlink = new;
     }
     else
     {
@@ -89,47 +93,54 @@ void insertAtEnd(node *header)
 {
     int x;
     node *new, *ptr;
-    ptr = header->link;
-    while (ptr->link != NULL)
-        ptr = ptr->link;
+    ptr = header->rlink;
+    while (ptr->rlink != NULL)
+        ptr = ptr->rlink;
 
     printf("Enter data: ");
     scanf("%d", &x);
     new = getNode(x);
-    ptr->link = new;
+    new->llink = ptr;
+    ptr->rlink = new;
 }
 
 void deleteAtFront(node *header)
 {
-    if (header->link == NULL)
+    if (header->rlink == NULL)
     {
         printf("\nNo elements in linked list!\n");
         return;
     }
     node *ptr;
-    ptr = header->link;
-    header->link = ptr->link;
+    ptr = header->rlink;
+    header->rlink = ptr->rlink;
+    ptr = ptr->rlink;
+    ptr->llink = header;
+    ptr = ptr->llink;
     free(ptr);
 }
 
 void deleteAtKey(node *header, int key)
 {
-    if (header->link == NULL)
+    if (header->rlink == NULL)
     {
         printf("\nNo elements in linked list!\n");
         return;
     }
-    node *ptr, *temp;
-    ptr = header->link;
-    while (ptr->link != NULL && ptr->data != key)
+    node *ptr, *temp, *temp2;
+    ptr = header->rlink;
+    while (ptr->rlink != NULL && ptr->data != key)
     {
-        ptr = ptr->link;
+        ptr = ptr->rlink;
     }
     if (ptr->data == key)
     {
-        temp = ptr->link;
-        ptr->link = temp->link;
-        free(temp);
+        temp = ptr->rlink;
+        temp2 = temp;
+        ptr->rlink = temp->rlink;
+        temp = temp->rlink;
+        temp->llink = ptr;
+        free(temp2);
     }
     else
     {
@@ -139,20 +150,20 @@ void deleteAtKey(node *header, int key)
 
 void deleteAtEnd(node *header)
 {
-    if (header->link == NULL)
+    if (header->rlink == NULL)
     {
         printf("\nNo elements in linked list!\n");
         return;
     }
     node *ptr, *temp;
     temp = header;
-    ptr = header->link;
-    while (ptr->link != NULL)
+    ptr = header->rlink;
+    while (ptr->rlink != NULL)
     {
         temp = ptr;
-        ptr = ptr->link;
+        ptr = ptr->rlink;
     }
-    temp->link = ptr->link  ;
+    temp->rlink = ptr->rlink;
     free(ptr);
 }
 
@@ -200,7 +211,6 @@ void main()
             printLL(header);
             break;
 
-
         case 2:
 
             printf("\nEnter method\n1. Beginning\n2. After key\n3. At the end\n\nEnter Choice: ");
@@ -228,16 +238,14 @@ void main()
             printLL(header);
             break;
 
-        
         case 3:
-            
+
             printLL(header);
             break;
 
         case 4:
 
             return;
-
 
         default:
             printf("\nInvalid Option!!\n");
