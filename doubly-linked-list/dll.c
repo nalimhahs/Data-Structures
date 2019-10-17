@@ -136,11 +136,19 @@ void deleteAtKey(node *header, int key)
     if (ptr->data == key)
     {
         temp = ptr->rlink;
-        temp2 = temp;
+        if (ptr->rlink == NULL)
+        {
+            return;
+        }
+        else if (temp->rlink == NULL)
+        {
+            return;
+        }
         ptr->rlink = temp->rlink;
         temp = temp->rlink;
         temp->llink = ptr;
-        free(temp2);
+        // ptr = ptr->rlink;
+        // free(temp2);
     }
     else
     {
