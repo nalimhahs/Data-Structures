@@ -170,20 +170,6 @@ int get_next_move(int maze[N][N], point end)
     }
 }
 
-int solve(int maze[N][N], point current, point end)
-{
-    move initial;
-    int status;
-    initial.position = current;
-    initial.direction = 0;
-    push(initial);
-    status = get_next_move(maze, end);
-    if (status == -1)
-    {
-        printf("\nMaze cannot be solved!\n");
-    }
-}
-
 void print_solution(int maze[N][N])
 {
     char sol[N][N];
@@ -213,8 +199,46 @@ void print_solution(int maze[N][N])
     {
         for (int j = 0; j < N; j++)
         {
-            printf("%c ",sol[i][j]);
+            printf("%c ", sol[i][j]);
         }
         printf("\n");
     }
+}
+
+int solve(int maze[N][N], point current, point end)
+{
+    move initial;
+    int status;
+    initial.position = current;
+    initial.direction = 0;
+    push(initial);
+    status = get_next_move(maze, end);
+    if (status == -1)
+    {
+        printf("\nMaze cannot be solved!\n");
+    }
+    else
+    {
+        print_solution(maze);
+    }
+}
+
+void main()
+{
+    int maze[N][N], x, y;
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            maze[i][j] = 0;
+        }
+    }
+
+    do
+    {
+        printf("\nEnter barrier X position: ");
+        scanf("%d", &x);
+        printf("\nEnter barrier Y position: ");
+        scanf("%d", &y);
+    }while();
 }
